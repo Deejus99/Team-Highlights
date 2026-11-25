@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Highlights of the Year</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+</head>
+<body class="min-h-screen bg-amber-50 font-sans text-slate-900 antialiased">
+    <header class="border-b border-amber-100 bg-amber-50/95 shadow-sm backdrop-blur">
+        <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+            <div class="flex min-w-0 items-center gap-3">
+                <div class="flex h-11 w-11 shrink-0 -rotate-2 items-center justify-center rounded-2xl bg-yellow-300 shadow-sm" aria-hidden="true">
+                    <svg class="h-6 w-6 text-slate-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.956a1 1 0 00.95.69h4.16c.969 0 1.371 1.24.588 1.81l-3.366 2.445a1 1 0 00-.364 1.118l1.286 3.956c.3.921-.755 1.688-1.539 1.118l-3.365-2.445a1 1 0 00-1.176 0L8.047 18.02c-.784.57-1.838-.197-1.539-1.118l1.286-3.956a1 1 0 00-.363-1.118L4.065 9.383c-.783-.57-.38-1.81.588-1.81h4.16a1 1 0 00.951-.69l1.285-3.956z"/>
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <p class="truncate text-xs font-bold uppercase tracking-[0.18em] text-amber-700">30-minute team exercise</p>
+                    <h1 class="truncate text-lg font-extrabold tracking-tight sm:text-xl">Highlights of the Year</h1>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <span id="connectionBadge" class="rounded-full border border-amber-200 bg-amber-100 px-3 py-1.5 text-xs font-bold text-amber-900" role="status">Demo / local</span>
+            <button id="planHeaderButton" type="button" class="hidden min-h-11 items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-amber-300 hover:bg-amber-50 focus:outline-none focus:ring-4 focus:ring-amber-200 sm:flex">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2m5-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Facilitation plan
+            </button>
+            </div>
+        </div>
+    </header>
+
+    <nav class="sticky top-0 z-30 border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur" aria-label="Choose experience view">
+        <div class="mx-auto flex max-w-7xl gap-1 p-2 sm:px-6 lg:px-8">
+            <button id="participantTab" type="button" class="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 text-sm font-bold text-white shadow-sm transition focus:outline-none focus:ring-4 focus:ring-amber-200 sm:flex-none" aria-selected="true">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                </svg>
+                Add a highlight
+            </button>
+            <button id="facilitatorTab" type="button" class="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl px-4 text-sm font-bold text-slate-600 transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-amber-200 sm:flex-none" aria-selected="false">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 19.5V8.75M10 19.5V4.5m6 15V11m4 8.5H2"/>
+                </svg>
+                Facilitator timeline
+                <span id="tabCount" class="rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-800">5</span>
+            </button>
+        </div>
+    </nav>
+
+    <main>
+        <section id="landingView" class="mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-16" aria-labelledby="landingHeading">
+            <div class="overflow-hidden rounded-3xl border border-amber-100 bg-white shadow-xl shadow-amber-900/5">
+                <div class="bg-gradient-to-br from-amber-200 via-yellow-100 to-pink-100 p-7 text-center sm:p-12">
+                    <span class="text-5xl" aria-hidden="true">✨</span>
+                    <p class="mt-5 text-xs font-bold uppercase tracking-[0.18em] text-amber-800">A shared celebration of the year</p>
+                    <h2 id="landingHeading" class="mt-2 text-3xl font-black tracking-tight sm:text-5xl">What made this year memorable?</h2>
+                    <p class="mx-auto mt-4 max-w-2xl leading-7 text-slate-700">Add one bright spot from your year, or open the facilitator timeline to reveal the team’s highlights together.</p>
+                </div>
+                <div class="grid gap-4 p-5 sm:grid-cols-2 sm:p-8">
+                    <button id="joinEventButton" type="button" class="min-h-28 rounded-2xl bg-slate-900 p-5 text-left text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-amber-300">
+                        <span class="block text-lg font-black">Join and add a highlight</span>
+                        <span class="mt-1 block text-sm text-slate-300">Participant submission form</span>
+                    </button>
+                    <button id="openFacilitatorButton" type="button" class="min-h-28 rounded-2xl border-2 border-amber-300 bg-amber-50 p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:bg-amber-100 focus:outline-none focus:ring-4 focus:ring-amber-300">
+                        <span class="block text-lg font-black">Facilitator view</span>
+                        <span class="mt-1 block text-sm text-slate-600">Timeline, read mode and event controls</span>
+                    </button>
+                </div>
+                <p class="border-t border-slate-100 px-6 py-4 text-center text-xs text-slate-500">A facilitator PIN can provide light client-side protection. For production security, use Supabase Authentication.</p>
+            </div>
+        </section>
+
+        <section id="participantView" class="mx-auto hidden max-w-2xl px-4 py-8 sm:px-6 sm:py-12" aria-labelledby="participantHeading">
+            <div id="entryPanel">
+                <div class="mb-7 text-center">
+                    <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-pink-100 px-3 py-1.5 text-sm font-semibold text-pink-800">
+                        <span aria-hidden="true">✨</span>
+                        Pause, remember, celebrate
+                    </div>
+                    <h2 id="participantHeading" class="text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">Add your highlight of the year</h2>
+                    <p class="mx-auto mt-3 max-w-lg text-base leading-7 text-slate-600">Share one moment that made this year memorable. Your facilitator will reveal it on the team timeline.</p>
+                </div>
+
+                <form id="highlightForm" class="rounded-3xl border border-amber-100 bg-white p-5 shadow-xl shadow-amber-900/5 sm:p-8" novalidate>
+                    <div class="space-y-7">
+                        <div>
+                            <label for="nameInput" class="mb-2 block text-sm font-bold text-slate-800">Your name <span class="font-normal text-slate-500">(optional)</span></label>
+                            <input id="nameInput" name="name" type="text" maxlength="60" autocomplete="name" placeholder="e.g. Alex" class="min-h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-base text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-amber-500 focus:ring-4 focus:ring-amber-100">
+                            <p class="mt-2 flex items-center gap-1.5 text-sm text-slate-500">
+                                <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 11c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zm0 0c0 2.21 1.343 4 3 4 .828 0 1.5-.672 1.5-1.5V11a6.5 6.5 0 10-2.147 4.834"/>
+                                </svg>
+                                Leave blank to post anonymously
+                            </p>
+                        </div>
+
+                        <div>
+                            <div class="mb-2 flex items-center justify-between gap-4">
+                                <label for="highlightInput" class="text-sm font-bold text-slate-800">Your highlight <span class="text-rose-600">*</span></label>
+                                <span id="characterCount" class="text-xs font-semibold tabular-nums text-slate-500">0 / 280</span>
+                            </div>
+                            <textarea id="highlightInput" name="highlight" rows="5" maxlength="280" required aria-describedby="highlightError" placeholder="What moment made you feel proud, grateful or delighted?" class="w-full resize-y rounded-xl border border-slate-300 bg-white px-4 py-3 text-base leading-6 text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-amber-500 focus:ring-4 focus:ring-amber-100"></textarea>
+                            <p id="highlightError" class="mt-2 hidden text-sm font-semibold text-rose-600" role="alert">Please add a highlight before submitting.</p>
+                        </div>
+
+                        <div>
+                            <label for="monthSelect" class="mb-2 block text-sm font-bold text-slate-800">When did it happen? <span class="text-rose-600">*</span></label>
+                            <select id="monthSelect" name="month" required class="min-h-12 w-full appearance-none rounded-xl border border-slate-300 bg-white px-4 text-base text-slate-900 shadow-sm outline-none transition focus:border-amber-500 focus:ring-4 focus:ring-amber-100">
+                                <option value="">Choose a month</option>
+                            </select>
+                            <p id="monthError" class="mt-2 hidden text-sm font-semibold text-rose-600" role="alert">Please choose a month.</p>
+                        </div>
+
+                        <fieldset>
+                            <legend class="mb-3 text-sm font-bold text-slate-800">Category <span class="font-normal text-slate-500">(optional)</span></legend>
+                            <div id="categoryChips" class="flex flex-wrap gap-2"></div>
+                        </fieldset>
+
+                        <fieldset>
+                            <legend class="mb-3 text-sm font-bold text-slate-800">Choose a post-it colour</legend>
+                            <div id="colorChoices" class="flex flex-wrap gap-3"></div>
+                        </fieldset>
+
+                        <div id="storageError" class="hidden rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700" role="alert">
+                            This browser could not save the entry. Check your privacy or storage settings and try again.
+                        </div>
+
+                        <button type="submit" class="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-slate-900 px-6 text-base font-bold text-white shadow-lg shadow-slate-900/15 transition hover:-translate-y-0.5 hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-amber-300 active:translate-y-0">
+                            Add to the timeline
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="confirmationPanel" class="hidden py-8 text-center" role="status" aria-live="polite">
+                <div class="mx-auto max-w-lg rounded-3xl border border-emerald-200 bg-white p-7 shadow-xl shadow-emerald-900/5 sm:p-10">
+                    <div class="mx-auto flex h-20 w-20 rotate-3 items-center justify-center rounded-3xl bg-emerald-200 shadow-sm">
+                        <svg class="h-10 w-10 text-emerald-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </div>
+                    <h2 class="mt-6 text-3xl font-black tracking-tight">Your highlight is in!</h2>
+                    <p class="mt-3 text-base leading-7 text-slate-600">Thank you for adding a bright spot to the year. It is now saved to this browser’s timeline.</p>
+                    <div class="mt-7 grid gap-3 sm:grid-cols-2">
+                        <button id="addAnotherButton" type="button" class="min-h-12 rounded-xl bg-slate-900 px-5 font-bold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-amber-200">Add another highlight</button>
+                        <button id="viewTimelineButton" type="button" class="min-h-12 rounded-xl border border-slate-300 bg-white px-5 font-bold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-amber-200">View timeline</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="facilitatorView" class="hidden" aria-labelledby="timelineHeading">
+            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+                <div class="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+                    <div>
+                        <div class="mb-2 inline-flex items-center gap-2 rounded-full bg-amber-200 px-3 py-1 text-sm font-bold text-amber-900">
+                            <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                            Facilitator view
+                        </div>
+                        <h2 id="timelineHeading" class="text-3xl font-black tracking-tight sm:text-4xl">Our year in highlights</h2>
+                        <p class="mt-2 text-slate-600">Select a post-it to open it for reading aloud.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2" aria-label="Timeline controls">
+                        <button id="readModeButton" type="button" class="flex min-h-11 items-center gap-2 rounded-xl bg-slate-900 px-4 text-sm font-bold text-white shadow-sm transition hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-amber-200">
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253"/>
+                            </svg>
+                            Read mode
+                        </button>
+                        <button id="shuffleButton" type="button" class="flex min-h-11 items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 text-sm font-bold text-slate-700 shadow-sm transition hover:border-amber-300 hover:bg-amber-50 focus:outline-none focus:ring-4 focus:ring-amber-200">
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4l5 5m0 0l-5 5m5-5h3a6 6 0 016 6v1m2 4l-2-2-2 2M4 20l5-5m9-7V7a6 6 0 00-6-6"/>
+                            </svg>
+                            Shuffle
+                        </button>
+                        <button id="namesButton" type="button" aria-pressed="true" class="min-h-11 rounded-xl border border-slate-300 bg-white px-4 text-sm font-bold text-slate-700 shadow-sm transition hover:border-amber-300 hover:bg-amber-50 focus:outline-none focus:ring-4 focus:ring-amber-200">Hide names</button>
+                        <button id="hideReadButton" type="button" aria-pressed="false" class="min-h-11 rounded-xl border border-slate-300 bg-white px-4 text-sm font-bold text-slate-700 shadow-sm transition hover:border-amber-300 hover:bg-amber-50 focus:outline-none focus:ring-4 focus:ring-amber-200">Hide read items</button>
+                        <button id="resetButton" type="button" class="min-h-11 rounded-xl border border-rose-200 bg-rose-50 px-4 text-sm font-bold text-rose-700 transition hover:bg-rose-100 focus:outline-none focus:ring-4 focus:ring-rose-200">Reset demo</button>
+                    </div>
+                </div>
+
+                <section class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4" aria-label="Participation statistics">
+                    <article class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                        <p class="text-xs font-bold uppercase tracking-wider text-slate-500">Highlights</p>
+                        <p id="totalStat" class="mt-1 text-3xl font-black tabular-nums">0</p>
+                    </article>
+                    <article class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                        <p class="text-xs font-bold uppercase tracking-wider text-slate-500">Contributors</p>
+                        <p id="contributorsStat" class="mt-1 text-3xl font-black tabular-nums">0</p>
+                    </article>
+                    <article class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                        <p class="text-xs font-bold uppercase tracking-wider text-slate-500">Months</p>
+                        <p id="monthsStat" class="mt-1 text-3xl font-black tabular-nums">0</p>
+                    </article>
+                    <article class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                        <p class="text-xs font-bold uppercase tracking-wider text-slate-500">Read</p>
+                        <p id="readStat" class="mt-1 text-3xl font-black tabular-nums">0</p>
+                    </article>
+                </section>
+
+                <section class="mt-6 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6" aria-labelledby="eventControlsHeading">
+                    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                        <div>
+                            <h3 id="eventControlsHeading" class="font-extrabold">Event controls</h3>
+                            <p class="mt-1 text-sm text-slate-500">These switches apply to this open browser session. Persist event settings in Supabase for a full production build.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button id="submissionsButton" type="button" aria-pressed="true" class="min-h-11 rounded-xl bg-emerald-100 px-4 text-sm font-bold text-emerald-800 focus:outline-none focus:ring-4 focus:ring-emerald-200">Submissions enabled</button>
+                            <button id="anonymousButton" type="button" aria-pressed="true" class="min-h-11 rounded-xl bg-sky-100 px-4 text-sm font-bold text-sky-800 focus:outline-none focus:ring-4 focus:ring-sky-200">Anonymous allowed</button>
+                            <button id="exportButton" type="button" class="min-h-11 rounded-xl border border-slate-300 bg-white px-4 text-sm font-bold text-slate-700 focus:outline-none focus:ring-4 focus:ring-amber-200">Export CSV</button>
+                            <button id="clearButton" type="button" class="min-h-11 rounded-xl border border-rose-300 bg-rose-50 px-4 text-sm font-bold text-rose-700 focus:outline-none focus:ring-4 focus:ring-rose-200">Delete all local entries</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-lg shadow-slate-900/5" aria-label="Year timeline">
+                    <div class="flex items-center justify-between gap-3 border-b border-slate-200 bg-slate-50 px-5 py-4">
+                        <div>
+                            <h3 class="font-extrabold">January — December</h3>
+                            <p class="text-sm text-slate-500">Swipe horizontally to explore the year</p>
+                        </div>
+                        <div class="hidden items-center gap-2 text-xs font-semibold text-slate-500 sm:flex">
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7l-5 5 5 5m8-10l5 5-5 5M3 12h18"/>
+                            </svg>
+                            Scroll
+                        </div>
+                    </div>
+                    <div id="timelineScroller" class="overflow-x-auto overscroll-x-contain">
+                        <div id="timelineGrid" class="grid min-w-max grid-flow-col auto-cols-[16rem] gap-0 p-4 sm:auto-cols-[18rem] sm:p-6"></div>
+                    </div>
+                </section>
+
+                <section class="mt-8 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+                    <article id="qrPanel" class="rounded-3xl bg-slate-900 p-5 text-white shadow-xl sm:p-7">
+                        <div class="flex flex-col gap-6 sm:flex-row sm:items-center">
+                            <div class="relative mx-auto aspect-square w-full max-w-[15rem] shrink-0 rounded-3xl bg-white p-4 shadow-2xl sm:mx-0">
+                                <canvas id="qrCanvas" class="h-full w-full rounded-lg" aria-label="QR code for the public event URL"></canvas>
+                                <div id="qrFallback" class="hidden h-full items-center justify-center rounded-xl border-2 border-dashed border-slate-300 p-4 text-center text-sm font-bold text-slate-600">QR library unavailable. Copy and share the link instead.</div>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <p class="text-xs font-bold uppercase tracking-[0.18em] text-amber-300">Joining panel</p>
+                                <h3 class="mt-2 text-2xl font-black sm:text-3xl">Scan to add your highlight</h3>
+                                <p class="mt-3 text-sm leading-6 text-slate-300">The QR uses <code>PUBLIC_EVENT_URL</code> when configured, otherwise the current page URL.</p>
+                                <label for="joinUrl" class="mt-5 block text-sm font-bold text-white">Public join URL</label>
+                                <div class="mt-2 flex rounded-xl bg-white p-1">
+                                    <input id="joinUrl" type="url" spellcheck="false" class="min-h-11 min-w-0 flex-1 rounded-lg px-3 text-sm font-semibold text-slate-900 outline-none focus:ring-4 focus:ring-amber-200" aria-label="Join URL">
+                                    <button id="copyJoinUrlButton" type="button" class="rounded-lg bg-slate-100 px-3 text-xs font-bold text-slate-700 hover:bg-slate-200">Copy</button>
+                                </div>
+                                <button id="fullscreenQrButton" type="button" class="mt-4 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-amber-300 px-4 text-sm font-bold text-slate-900 transition hover:bg-amber-200 focus:outline-none focus:ring-4 focus:ring-amber-500">
+                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3M3 16v3a2 2 0 002 2h3m8 0h3a2 2 0 002-2v-3"/>
+                                    </svg>
+                                    Present joining panel full screen
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <details id="planDrawer" class="group rounded-3xl border border-slate-200 bg-white shadow-lg shadow-slate-900/5">
+                        <summary class="flex min-h-16 cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 font-extrabold focus:outline-none focus:ring-4 focus:ring-inset focus:ring-amber-200 sm:px-6">
+                            <span class="flex items-center gap-3">
+                                <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-800">
+                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2m5-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                </span>
+                                30-minute facilitation plan
+                            </span>
+                            <svg class="h-5 w-5 transition group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </summary>
+                        <ol class="space-y-4 border-t border-slate-100 px-5 py-5 sm:px-6">
+                            <li class="flex gap-3"><span class="w-20 shrink-0 text-sm font-black text-amber-700">0–3 min</span><span class="text-sm text-slate-700">Explain and scan QR</span></li>
+                            <li class="flex gap-3"><span class="w-20 shrink-0 text-sm font-black text-amber-700">3–10 min</span><span class="text-sm text-slate-700">Add highlights</span></li>
+                            <li class="flex gap-3"><span class="w-20 shrink-0 text-sm font-black text-amber-700">10–24 min</span><span class="text-sm text-slate-700">Reveal timeline and read highlights</span></li>
+                            <li class="flex gap-3"><span class="w-20 shrink-0 text-sm font-black text-amber-700">24–28 min</span><span class="text-sm text-slate-700">Group reflection—patterns, proud moments, surprises</span></li>
+                            <li class="flex gap-3"><span class="w-20 shrink-0 text-sm font-black text-amber-700">28–30 min</span><span class="text-sm text-slate-700">Close with one word for the year</span></li>
+                        </ol>
+                    </details>
+                </section>
+
+                <details id="setupDrawer" class="group mt-8 rounded-3xl border border-slate-200 bg-white shadow-lg shadow-slate-900/5">
+                    <summary class="flex min-h-16 cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 font-extrabold focus:outline-none focus:ring-4 focus:ring-inset focus:ring-amber-200 sm:px-6">
+                        <span>Setup / Deploy with Supabase</span>
+                        <svg class="h-5 w-5 transition group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </summary>
+                    <div class="space-y-7 border-t border-slate-100 p-5 sm:p-7">
+                        <div class="rounded-2xl border border-sky-200 bg-sky-50 p-4 text-sm leading-6 text-sky-950">
+                            Supabase provides hosted Postgres, anonymous browser access controlled by Row Level Security, and realtime updates without a custom server. Use only the public <strong>anon key</strong> in this file—never put a service-role key in browser code.
+                        </div>
+
+                        <ol class="list-decimal space-y-3 pl-5 text-sm leading-6 text-slate-700">
+                            <li>Create a new project at <strong>supabase.com</strong>.</li>
+                            <li>Open the SQL Editor and run the included table, indexes, grants and policies below.</li>
+                            <li>Copy the project URL and anon key into the clearly marked <code>CONFIG</code> object in this HTML file.</li>
+                            <li>Commit the single HTML file and deploy it through GitHub Pages, Vercel or Netlify.</li>
+                            <li>Set <code>PUBLIC_EVENT_URL</code> to the deployed HTTPS event URL.</li>
+                            <li>Reload the page, then display or download the generated QR code and test it from a second phone.</li>
+                        </ol>
+
+                        <section aria-labelledby="configHeading">
+                            <div class="mb-2 flex items-center justify-between gap-3">
+                                <h3 id="configHeading" class="font-extrabold">CONFIG object</h3>
+                                <button type="button" data-copy-target="configSnippet" class="copySnippet rounded-lg bg-slate-900 px-3 py-2 text-xs font-bold text-white">Copy</button>
+                            </div>
+                            <pre id="configSnippet" class="overflow-x-auto rounded-2xl bg-slate-950 p-4 text-xs leading-6 text-slate-100"><code>const CONFIG = {
+  SUPABASE_URL: "YOUR_SUPABASE_URL",
+  SUPABASE_ANON_KEY: "YOUR_SUPABASE_ANON_KEY",
+  EVENT_CODE: "YOUR_EVENT_CODE",
+  PUBLIC_EVENT_URL: "YOUR_PUBLIC_EVENT_URL",
+  FACILITATOR_PIN: ""
+};</code></pre>
+                        </section>
+
+                        <section aria-labelledby="sqlHeading">
+                            <div class="mb-2 flex items-center justify-between gap-3">
+                                <div>
+                                    <h3 id="sqlHeading" class="font-extrabold">supabase/schema.sql</h3>
+                                    <p class="text-sm text-slate-500">Prototype RLS permits validated anonymous reads, inserts and read-status updates.</p>
+                                </div>
+                                <button type="button" data-copy-target="sqlSnippet" class="copySnippet rounded-lg bg-slate-900 px-3 py-2 text-xs font-bold text-white">Copy SQL</button>
+                            </div>
+                            <pre id="sqlSnippet" class="max-h-[32rem] overflow-auto rounded-2xl bg-slate-950 p-4 text-xs leading-6 text-slate-100"><code>create extension if not exists pgcrypto;
+
+create table if not exists public.highlights (
+  id uuid primary key default gen_random_uuid(),
+  event_code text not null,
+  highlight text not null,
+  month integer not null check (month between 0 and 11),
+  category text not null default '',
+  display_name text null,
+  color text not null default 'yellow',
+  is_read boolean not null default false,
+  created_at timestamptz not null default now(),
+  constraint highlight_length check (char_length(highlight) between 1 and 280),
+  constraint event_code_length check (char_length(event_code) between 1 and 80),
+  constraint display_name_length check (display_name is null or char_length(display_name) &lt;= 60),
+  constraint valid_color check (color in ('yellow','pink','blue','green','purple'))
+);
+
+create index if not exists highlights_event_created_idx
+  on public.highlights (event_code, created_at);
+create index if not exists highlights_event_month_idx
+  on public.highlights (event_code, month);
+
+alter table public.highlights enable row level security;
+grant select, insert on public.highlights to anon;
+grant update (is_read) on public.highlights to anon;
+
+create policy "anon can read event highlights"
+on public.highlights for select to anon
+using (event_code &lt;&gt; '');
+
+create policy "anon can submit validated highlights"
+on public.highlights for insert to anon
+with check (
+  event_code &lt;&gt; ''
+  and char_length(highlight) between 1 and 280
+  and month between 0 and 11
+);
+
+create policy "anon can update read status"
+on public.highlights for update to anon
+using (event_code &lt;&gt; '')
+with check (event_code &lt;&gt; '');
+
+alter publication supabase_realtime add table public.highlights;</code></pre>
+                            <p class="mt-3 text-sm leading-6 text-rose-700"><strong>Security note:</strong> a client-side facilitator PIN is only light protection because its value is delivered to every browser. Before production, protect facilitator updates and destructive actions with Supabase Authentication and stricter authenticated-role policies or an Edge Function.</p>
+                        </section>
+
+                        <section aria-labelledby="integrationHeading">
+                            <div class="mb-2 flex items-center justify-between gap-3">
+                                <h3 id="integrationHeading" class="font-extrabold">Browser integration pattern</h3>
+                                <button type="button" data-copy-target="integrationSnippet" class="copySnippet rounded-lg bg-slate-900 px-3 py-2 text-xs font-bold text-white">Copy</button>
+                            </div>
+                            <pre id="integrationSnippet" class="max-h-80 overflow-auto rounded-2xl bg-slate-950 p-4 text-xs leading-6 text-slate-100"><code>const client = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+
+// Load one event
+const { data } = await client.from("highlights")
+  .select("*").eq("event_code", CONFIG.EVENT_CODE)
+  .order("created_at");
+
+// Insert a submission
+await client.from("highlights").insert({
+  event_code: CONFIG.EVENT_CODE,
+  highlight, month, category, display_name, color
+});
+
+// Realtime INSERT and UPDATE
+client.channel("event-" + CONFIG.EVENT_CODE)
+  .on("postgres_changes", {
+    event: "*", schema: "public", table: "highlights",
+    filter: `event_code=eq.${CONFIG.EVENT_CODE}`
+  }, () =&gt; loadHighlights())
+  .subscribe();
+
+// Mark read
+await client.from("highlights").update({ is_read: true }).eq("id", id);</code></pre>
+                        </section>
+
+                        <section aria-labelledby="repoHeading">
+                            <h3 id="repoHeading" class="font-extrabold">Suggested repository layout</h3>
+                            <pre class="mt-2 overflow-x-auto rounded-2xl bg-slate-100 p-4 text-sm text-slate-800"><code>/
+├── index.html
+├── README.md
+└── supabase/
+    └── schema.sql</code></pre>
+                            <p class="mt-2 text-sm text-slate-500">This single-file artifact includes every required snippet above so each file can be copied out when the repository is created.</p>
+                        </section>
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <section class="border-t border-amber-100 bg-white">
+            <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+                <div class="max-w-3xl">
+                    <p class="text-xs font-bold uppercase tracking-[0.18em] text-amber-700">From prototype to event</p>
+                    <h2 class="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Implementation options</h2>
+                    <p class="mt-2 text-slate-600">Choose based on launch speed, visual experience and the level of branding your team day needs.</p>
+                </div>
+
+                <div class="mt-7 grid gap-4 lg:grid-cols-3">
+                    <article class="rounded-3xl border border-slate-200 bg-slate-50 p-5 sm:p-6">
+                        <div class="flex items-start justify-between gap-4">
+                            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-100 font-black text-sky-800">A</span>
+                            <span class="rounded-full bg-white px-3 py-1 text-xs font-bold text-slate-600 shadow-sm">Fastest / no-code</span>
+                        </div>
+                        <h3 class="mt-5 text-lg font-black">Microsoft Forms + Excel / Power BI or Miro</h3>
+                        <dl class="mt-4 space-y-3 text-sm leading-6">
+                            <div><dt class="font-bold text-slate-900">Setup effort</dt><dd class="text-slate-600">Low; typically a few hours using existing tools.</dd></div>
+                            <div><dt class="font-bold text-slate-900">Strengths</dt><dd class="text-slate-600">Familiar, secure within Microsoft 365, simple data export and reporting.</dd></div>
+                            <div><dt class="font-bold text-slate-900">Limitations</dt><dd class="text-slate-600">The timeline and reveal experience require manual assembly or dashboard configuration.</dd></div>
+                        </dl>
+                    </article>
+
+                    <article class="rounded-3xl border-2 border-amber-300 bg-amber-50 p-5 shadow-lg shadow-amber-900/5 sm:p-6">
+                        <div class="flex items-start justify-between gap-4">
+                            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-300 font-black text-slate-900">B</span>
+                            <span class="rounded-full bg-slate-900 px-3 py-1 text-xs font-bold text-white">Quickest launch</span>
+                        </div>
+                        <h3 class="mt-5 text-lg font-black">Slido, Mentimeter or Padlet</h3>
+                        <dl class="mt-4 space-y-3 text-sm leading-6">
+                            <div><dt class="font-bold text-slate-900">Setup effort</dt><dd class="text-slate-600">Very low; launch a polished audience activity quickly.</dd></div>
+                            <div><dt class="font-bold text-slate-900">Strengths</dt><dd class="text-slate-600">Reliable live participation, easy joining and presentation-friendly moderation.</dd></div>
+                            <div><dt class="font-bold text-slate-900">Limitations</dt><dd class="text-slate-600">Limited timeline customisation, branding and layout control; licensing may apply.</dd></div>
+                        </dl>
+                        <p class="mt-5 rounded-xl bg-white p-3 text-sm font-semibold text-amber-900">Recommended: Padlet or Mentimeter when speed is the priority.</p>
+                    </article>
+
+                    <article class="rounded-3xl border-2 border-slate-900 bg-white p-5 shadow-lg shadow-slate-900/5 sm:p-6">
+                        <div class="flex items-start justify-between gap-4">
+                            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 font-black text-white">C</span>
+                            <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800">Best fit</span>
+                        </div>
+                        <h3 class="mt-5 text-lg font-black">Custom branded web app</h3>
+                        <dl class="mt-4 space-y-3 text-sm leading-6">
+                            <div><dt class="font-bold text-slate-900">Setup effort</dt><dd class="text-slate-600">Medium; requires hosting, a shared backend, testing and moderation controls.</dd></div>
+                            <div><dt class="font-bold text-slate-900">Strengths</dt><dd class="text-slate-600">Full visual timeline, live updates, custom branding, accessibility and tailored facilitation.</dd></div>
+                            <div><dt class="font-bold text-slate-900">Limitations</dt><dd class="text-slate-600">Needs development ownership, data governance and production support.</dd></div>
+                        </dl>
+                        <p class="mt-5 rounded-xl bg-slate-900 p-3 text-sm font-semibold text-white">Recommended when visual timeline, live updates and branding matter.</p>
+                    </article>
+                </div>
+
+                <div class="mt-8 flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-950">
+                    <svg class="mt-0.5 h-5 w-5 shrink-0 text-amber-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <p><strong>Prototype note:</strong> This demo stores data only in the current browser. Entries do not synchronise between devices. Production requires a shared backend and a deployed HTTPS URL before generating the final QR code.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="readerModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/80 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="readerTitle">
+        <div class="w-full max-w-2xl">
+            <div class="mb-3 flex items-center justify-between text-white">
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-[0.18em] text-amber-300">Reading aloud</p>
+                    <h2 id="readerTitle" class="text-lg font-extrabold">Highlight</h2>
+                </div>
+                <button id="closeModalButton" type="button" class="flex h-12 w-12 items-center justify-center rounded-full bg-white/10 transition hover:bg-white/20 focus:outline-none focus:ring-4 focus:ring-amber-300" aria-label="Close reader">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <article id="readerCard" class="rotate-1 rounded-3xl p-7 shadow-2xl sm:p-10">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <span id="readerMonth" class="rounded-full bg-white/60 px-3 py-1 text-sm font-black"></span>
+                    <span id="readerCategory" class="rounded-full bg-white/60 px-3 py-1 text-xs font-bold"></span>
+                </div>
+                <blockquote id="readerText" class="mt-8 text-2xl font-black leading-snug tracking-tight sm:text-4xl"></blockquote>
+                <p id="readerName" class="mt-7 text-base font-bold"></p>
+            </article>
+            <div class="mt-4 grid gap-3 sm:grid-cols-2">
+                <button id="markReadButton" type="button" class="min-h-14 rounded-2xl bg-emerald-500 px-6 font-bold text-white shadow-lg transition hover:bg-emerald-400 focus:outline-none focus:ring-4 focus:ring-emerald-200">Mark as read</button>
+                <button id="nextHighlightButton" type="button" class="min-h-14 rounded-2xl bg-white px-6 font-bold text-slate-900 shadow-lg transition hover:bg-amber-50 focus:outline-none focus:ring-4 focus:ring-amber-200">Next highlight</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-4 left-1/2 z-[60] hidden -translate-x-1/2 rounded-xl bg-slate-900 px-4 py-3 text-sm font-bold text-white shadow-xl" role="status" aria-live="polite"></div>
+
+    <script>
+        const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+        const CATEGORIES = ["Team win","Client success","Personal growth","Fun moment","Other"];
+        const COLORS = {
+            yellow: { card: "bg-yellow-200", dot: "bg-yellow-300", label: "Sunshine yellow" },
+            pink: { card: "bg-pink-200", dot: "bg-pink-300", label: "Celebration pink" },
+            blue: { card: "bg-sky-200", dot: "bg-sky-300", label: "Bright blue" },
+            green: { card: "bg-emerald-200", dot: "bg-emerald-300", label: "Fresh green" },
+            purple: { card: "bg-violet-200", dot: "bg-violet-300", label: "Creative purple" }
+        };
+        const STORAGE_KEY = "highlightsOfTheYearEntriesV1";
+
+        // SETUP: replace only these placeholders. Use the public anon key, never a service-role key.
+        const CONFIG = {
+            SUPABASE_URL: "YOUR_SUPABASE_URL",
+            SUPABASE_ANON_KEY: "YOUR_SUPABASE_ANON_KEY",
+            EVENT_CODE: "YOUR_EVENT_CODE",
+            PUBLIC_EVENT_URL: "YOUR_PUBLIC_EVENT_URL",
+            FACILITATOR_PIN: ""
+        };
+
+        const DEMO_ENTRIES = [
+            {
+                id: "demo-1",
+                name: "Maya",
+                text: "We launched the new client platform ahead of schedule—and the first feedback called it “effortless to use.”",
+                month: 1,
+                category: "Client success",
+                color: "yellow",
+                read: false,
+                createdAt: 1708000000000
+            },
+            {
+                id: "demo-2",
+                name: "Jordan",
+                text: "Our mentoring circle grew into a genuine community. Seeing new voices become confident leaders was a real highlight.",
+                month: 3,
+                category: "Personal growth",
+                color: "purple",
+                read: false,
+                createdAt: 1713000000000
+            },
+            {
+                id: "demo-3",
+                name: "",
+                text: "The whole team rallied around a difficult release. Calm communication, generous support and zero blame made me proud.",
+                month: 5,
+                category: "Team win",
+                color: "green",
+                read: false,
+                createdAt: 1718500000000
+            },
+            {
+                id: "demo-4",
+                name: "Sam",
+                text: "Our charity hackathon produced three brilliant prototypes, plenty of pizza and one unexpectedly competitive quiz.",
+                month: 9,
+                category: "Fun moment",
+                color: "pink",
+                read: false,
+                createdAt: 1728500000000
+            },
+            {
+                id: "demo-5",
+                name: "Priya",
+                text: "We closed the year with our strongest customer satisfaction score yet—a result built from hundreds of thoughtful improvements.",
+                month: 11,
+                category: "Team win",
+                color: "blue",                read: false,
+                createdAt: 1734000000000
+            }
+        ];
+
+        let entries = [];
+        let showNames = true;
+        let hideRead = false;
+        let shuffledOrder = null;
+        let activeEntryId = null;
+        let lastFocusedElement = null;
+        let supabaseClient = null;
+        let realtimeChannel = null;
+        let liveMode = false;
+        let submissionsEnabled = true;
+        let anonymousAllowed = true;
+        let facilitatorUnlocked = false;
+
+        const landingView = document.getElementById("landingView");
+        const participantView = document.getElementById("participantView");
+        const facilitatorView = document.getElementById("facilitatorView");
+        const participantTab = document.getElementById("participantTab");
+        const facilitatorTab = document.getElementById("facilitatorTab");
+        const form = document.getElementById("highlightForm");
+        const highlightInput = document.getElementById("highlightInput");
+        const nameInput = document.getElementById("nameInput");
+        const monthSelect = document.getElementById("monthSelect");
+        const characterCount = document.getElementById("characterCount");
+        const timelineGrid = document.getElementById("timelineGrid");
+        const modal = document.getElementById("readerModal");
+
+        function safeClone(data) {
+            return JSON.parse(JSON.stringify(data));
+        }
+
+        function hasLiveConfig() {
+            return /^https:\/\/.+\.supabase\.co$/i.test(CONFIG.SUPABASE_URL)
+                && CONFIG.SUPABASE_ANON_KEY
+                && !CONFIG.SUPABASE_ANON_KEY.startsWith("YOUR_")
+                && CONFIG.EVENT_CODE
+                && !CONFIG.EVENT_CODE.startsWith("YOUR_");
+        }
+
+        function fromDatabase(row) {
+            return {
+                id: row.id,
+                name: row.display_name || "",
+                text: row.highlight,
+                month: row.month,
+                category: row.category || "",
+                color: row.color || "yellow",
+                read: Boolean(row.is_read),
+                createdAt: new Date(row.created_at).getTime()
+            };
+        }
+
+        async function loadEntries() {
+            if (hasLiveConfig() && window.supabase) {
+                try {
+                    document.getElementById("connectionBadge").textContent = "Connecting…";
+                    supabaseClient = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+                    const { data, error } = await supabaseClient.from("highlights")
+                        .select("*")
+                        .eq("event_code", CONFIG.EVENT_CODE)
+                        .order("created_at", { ascending: true });
+                    if (error) throw error;
+                    entries = (data || []).map(fromDatabase);
+                    liveMode = true;
+                    updateConnectionBadge("Live / Supabase", true);
+                    subscribeToRealtime();
+                    renderAll();
+                    return;
+                } catch (error) {
+                    console.error(error);
+                    showToast("Supabase could not connect. Using local demo storage.");
+                }
+            }
+
+            try {
+                const stored = localStorage.getItem(STORAGE_KEY);
+                if (!stored) {
+                    entries = safeClone(DEMO_ENTRIES);
+                    saveEntries();
+                } else {
+                    const parsed = JSON.parse(stored);
+                    entries = Array.isArray(parsed) ? parsed : safeClone(DEMO_ENTRIES);
+                }
+            } catch (error) {
+                entries = safeClone(DEMO_ENTRIES);
+                showToast("Browser storage is unavailable; using temporary demo data.");
+            }
+            liveMode = false;
+            updateConnectionBadge("Demo / local", false);
+            renderAll();
+        }
+
+        function updateConnectionBadge(label, connected) {
+            const badge = document.getElementById("connectionBadge");            badge.textContent = label;
+            badge.className = connected
+                ? "rounded-full border border-emerald-200 bg-emerald-100 px-3 py-1.5 text-xs font-bold text-emerald-900"
+                : "rounded-full border border-amber-200 bg-amber-100 px-3 py-1.5 text-xs font-bold text-amber-900";
+        }
+
+        function subscribeToRealtime() {
+            if (!supabaseClient || realtimeChannel) return;
+            realtimeChannel = supabaseClient.channel(`highlights-${CONFIG.EVENT_CODE}`)
+                .on("postgres_changes", {
+                    event: "*",
+                    schema: "public",
+                    table: "highlights",
+                    filter: `event_code=eq.${CONFIG.EVENT_CODE}`
+                }, async () => {
+                    const { data, error } = await supabaseClient.from("highlights")
+                        .select("*")
+                        .eq("event_code", CONFIG.EVENT_CODE)
+                        .order("created_at", { ascending: true });
+                    if (!error) {
+                        entries = (data || []).map(fromDatabase);
+                        renderAll();
+                    }
+                })
+                .subscribe();
+        }
+
+        function saveEntries() {
+            if (liveMode) return true;
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+                document.getElementById("storageError").classList.add("hidden");
+                return true;
+            } catch (error) {
+                document.getElementById("storageError").classList.remove("hidden");
+                return false;
+            }
+        }
+
+        function setView(view) {
+            const participantActive = view === "participant";
+            const facilitatorActive = view === "facilitator";
+            landingView.classList.toggle("hidden", view !== "landing");
+            participantView.classList.toggle("hidden", !participantActive);
+            facilitatorView.classList.toggle("hidden", !facilitatorActive);
+
+            participantTab.setAttribute("aria-selected", String(participantActive));
+            facilitatorTab.setAttribute("aria-selected", String(facilitatorActive));
+
+            participantTab.className = participantActive
+                ? "flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 text-sm font-bold text-white shadow-sm transition focus:outline-none focus:ring-4 focus:ring-amber-200 sm:flex-none"
+                : "flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl px-4 text-sm font-bold text-slate-600 transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-amber-200 sm:flex-none";
+
+            facilitatorTab.className = facilitatorActive
+                ? "flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 text-sm font-bold text-white shadow-sm transition focus:outline-none focus:ring-4 focus:ring-amber-200 sm:flex-none"
+                : "flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl px-4 text-sm font-bold text-slate-600 transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-amber-200 sm:flex-none";
+
+            if (facilitatorActive) renderAll();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        function requestFacilitator(callback) {
+            if (!CONFIG.FACILITATOR_PIN || facilitatorUnlocked) {
+                facilitatorUnlocked = true;
+                callback();
+                return;
+            }
+            const entered = window.prompt("Enter the facilitator PIN. This is light client-side protection only.");
+            if (entered === null) return;
+            if (entered !== CONFIG.FACILITATOR_PIN) {
+                showToast("Incorrect facilitator PIN.");
+                return;
+            }
+            facilitatorUnlocked = true;
+            callback();
+        }
+
+        function initialiseFormOptions() {
+            MONTHS.forEach((month, index) => {
+                const option = document.createElement("option");
+                option.value = String(index);
+                option.textContent = month;
+                monthSelect.appendChild(option);
+            });
+
+            const categoryContainer = document.getElementById("categoryChips");
+            CATEGORIES.forEach(category => {
+                const label = document.createElement("label");
+                label.className = "cursor-pointer";
+                label.innerHTML = `
+                    <input type="radio" name="category" value="${category}" class="peer sr-only">
+                    <span class="flex min-h-11 items-center rounded-full border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:border-amber-400 peer-checked:border-slate-900 peer-checked:bg-slate-900 peer-checked:text-white peer-focus-visible:ring-4 peer-focus-visible:ring-amber-200">${category}</span>
+                `;
+                categoryContainer.appendChild(label);
+            });
+            const colorContainer = document.getElementById("colorChoices");
+            Object.entries(COLORS).forEach(([key, value], index) => {
+                const label = document.createElement("label");
+                label.className = "cursor-pointer";
+                label.innerHTML = `
+                    <input type="radio" name="color" value="${key}" class="peer sr-only" ${index === 0 ? "checked" : ""}>
+                    <span class="flex h-12 w-12 items-center justify-center rounded-2xl border-2 border-transparent ${value.dot} shadow-sm transition hover:scale-105 peer-checked:border-slate-900 peer-checked:ring-4 peer-checked:ring-slate-200 peer-focus-visible:ring-4 peer-focus-visible:ring-amber-200" title="${value.label}" aria-label="${value.label}">
+                        <svg class="hidden h-5 w-5 text-slate-900 peer-checked:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                    </span>
+                `;
+                colorContainer.appendChild(label);
+            });
+        }
+
+        function renderAll() {
+            renderTimeline();
+            renderStats();
+            document.getElementById("tabCount").textContent = entries.length;
+        }
+
+        function getDisplayEntries() {
+            let list = hideRead ? entries.filter(entry => !entry.read) : [...entries];
+            if (shuffledOrder) {
+                const indexMap = new Map(shuffledOrder.map((id, index) => [id, index]));                list.sort((a, b) => (indexMap.get(a.id) ?? 9999) - (indexMap.get(b.id) ?? 9999));
+            } else {
+                list.sort((a, b) => a.createdAt - b.createdAt);
+            }
+            return list;
+        }
+
+        function renderTimeline() {
+            timelineGrid.innerHTML = "";
+            const displayEntries = getDisplayEntries();
+
+            MONTHS.forEach((month, monthIndex) => {
+                const monthEntries = displayEntries.filter(entry => Number(entry.month) === monthIndex);
+                const column = document.createElement("section");
+                column.className = "relative border-r border-slate-200 px-3 pb-5 last:border-r-0 sm:px-4";
+                column.setAttribute("aria-label", month);
+
+                const header = document.createElement("div");
+                header.className = "sticky left-0 z-10 mb-5 flex items-center gap-3 bg-white py-2";
+                header.innerHTML = `                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${monthEntries.length ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-500"} text-sm font-black">${monthIndex + 1}</span>
+                    <div>
+                        <h4 class="font-black text-slate-900">${month}</h4>
+                        <p class="text-xs font-semibold text-slate-500">${monthEntries.length} ${monthEntries.length === 1 ? "highlight" : "highlights"}</p>
+                    </div>
+                `;
+                column.appendChild(header);
+
+                const line = document.createElement("div");
+                line.className = "absolute left-0 right-0 top-[4.35rem] h-1 bg-slate-100";
+                column.appendChild(line);
+
+                const marker = document.createElement("div");
+                marker.className = "relative z-10 mb-5 h-3 w-3 rounded-full border-2 border-white bg-amber-400 shadow ring-2 ring-amber-200";
+                column.appendChild(marker);
+
+                const stack = document.createElement("div");                stack.className = "space-y-4";
+
+                if (!monthEntries.length) {
+                    stack.innerHTML = `
+                        <div class="flex min-h-32 items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 p-5 text-center">
+                            <p class="text-sm font-medium text-slate-400">${hideRead ? "No unread highlights" : "Waiting for a highlight"}</p>
+                        </div>
+                    `;
+                } else {
+                    monthEntries.forEach((entry, index) => {
+                        const card = document.createElement("button");
+                        const rotation = index % 3 === 0 ? "-rotate-1" : index % 3 === 1 ? "rotate-1" : "";
+                        card.type = "button";
+                        card.className = `relative block min-h-40 w-full ${rotation} rounded-2xl ${COLORS[entry.color]?.card || "bg-yellow-200"} p-5 text-left text-slate-900 shadow-md transition duration-200 hover:z-10 hover:rotate-0 hover:-translate-y-1 hover:shadow-xl focus:z-10 focus:rotate-0 focus:outline-none focus:ring-4 focus:ring-slate-400 ${entry.read ? "opacity-55" : ""}`;
+                        card.setAttribute("aria-label", `Open ${month} highlight${entry.read ? ", already read" : ""}`);
+                        card.innerHTML = `
+                            <span class="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-white/60 ${entry.read ? "" : "hidden"}" title="Read">
+                                <svg class="h-4 w-4 text-emerald-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            </span>
+                            <span class="mb-3 inline-flex rounded-full bg-white/60 px-2.5 py-1 text-[11px] font-bold">${escapeHtml(entry.category || "Highlight")}</span>
+                            <p class="line-clamp-5 text-base font-bold leading-6">${escapeHtml(entry.text)}</p>                            <p class="mt-4 text-xs font-bold text-slate-700">${showNames ? escapeHtml(entry.name || "Anonymous") : "Name hidden"}</p>
+                        `;
+                        card.addEventListener("click", () => openReader(entry.id));
+                        stack.appendChild(card);
+                    });
+                }
+
+                column.appendChild(stack);
+                timelineGrid.appendChild(column);
+            });
+        }
+
+        function renderStats() {            const named = new Set(entries.filter(entry => entry.name.trim()).map(entry => entry.name.trim().toLowerCase()));
+            const anonymousCount = entries.filter(entry => !entry.name.trim()).length;
+            const contributorEstimate = named.size + anonymousCount;
+            const representedMonths = new Set(entries.map(entry => Number(entry.month))).size;
+            const readCount = entries.filter(entry => entry.read).length;
+
+            document.getElementById("totalStat").textContent = entries.length;
+            document.getElementById("contributorsStat").textContent = contributorEstimate;
+            document.getElementById("contributorsStat").title = "Named contributors plus anonymous submissions";
+            document.getElementById("monthsStat").textContent = representedMonths;
+            document.getElementById("readStat").textContent = readCount;
+        }
+
+        function openReader(id) {
+            const entry = entries.find(item => item.id === id);
+            if (!entry) return;
+
+            activeEntryId = id;
+            lastFocusedElement = document.activeElement;
+            document.getElementById("readerTitle").textContent = `${MONTHS[entry.month]} highlight`;
+            document.getElementById("readerMonth").textContent = MONTHS[entry.month];
+            document.getElementById("readerCategory").textContent = entry.category || "Highlight";
+            document.getElementById("readerText").textContent = `“${entry.text}”`;            document.getElementById("readerName").textContent = showNames ? `— ${entry.name || "Anonymous"}` : "— Name hidden";
+
+            const readerCard = document.getElementById("readerCard");
+            Object.values(COLORS).forEach(color => readerCard.classList.remove(color.card));
+            readerCard.classList.add(COLORS[entry.color]?.card || "bg-yellow-200");
+
+            const markButton = document.getElementById("markReadButton");
+            markButton.textContent = entry.read ? "Marked as read ✓" : "Mark as read";
+            markButton.disabled = entry.read;
+            markButton.classList.toggle("opacity-60", entry.read);
+            markButton.classList.toggle("cursor-not-allowed", entry.read);
+
+            modal.classList.remove("hidden");
+            modal.classList.add("flex");
+            document.body.classList.add("overflow-hidden");
+            document.getElementById("closeModalButton").focus();
+        }
+
+        function closeReader() {
+            modal.classList.add("hidden");
+            modal.classList.remove("flex");
+            document.body.classList.remove("overflow-hidden");
+            activeEntryId = null;
+            if (lastFocusedElement && typeof lastFocusedElement.focus === "function") lastFocusedElement.focus();
+        }
+
+        function nextUnread() {
+            const candidates = entries.filter(entry => !entry.read && entry.id !== activeEntryId);
+            if (!candidates.length) {
+                showToast("All highlights have been read.");
+                return;
+            }
+            const next = candidates[Math.floor(Math.random() * candidates.length)];
+            openReader(next.id);
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#039;");
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.textContent = message;
+            toast.classList.remove("hidden");
+            clearTimeout(showToast.timeout);
+            showToast.timeout = setTimeout(() => toast.classList.add("hidden"), 3000);
+        }
+
+        function resetEntryForm() {
+            form.reset();
+            document.querySelector('input[name="color"][value="yellow"]').checked = true;
+            characterCount.textContent = "0 / 280";
+            characterCount.classList.remove("text-rose-600");
+            document.getElementById("highlightError").classList.add("hidden");
+            document.getElementById("monthError").classList.add("hidden");
+            highlightInput.classList.remove("border-rose-500", "ring-4", "ring-rose-100");
+            monthSelect.classList.remove("border-rose-500", "ring-4", "ring-rose-100");
+        }
+
+        function getPublicEventUrl() {
+            return CONFIG.PUBLIC_EVENT_URL && !CONFIG.PUBLIC_EVENT_URL.startsWith("YOUR_")
+                ? CONFIG.PUBLIC_EVENT_URL
+                : window.location.href.split("#")[0];
+        }
+
+        function renderQrCode() {
+            const url = document.getElementById("joinUrl").value.trim() || getPublicEventUrl();
+            const canvas = document.getElementById("qrCanvas");
+            const fallback = document.getElementById("qrFallback");
+            if (!window.QRCode) {
+                canvas.classList.add("hidden");
+                fallback.classList.remove("hidden");
+                fallback.classList.add("flex");
+                return;
+            }
+            fallback.classList.add("hidden");
+            fallback.classList.remove("flex");
+            canvas.classList.remove("hidden");
+            window.QRCode.toCanvas(canvas, url, {
+                width: 420,
+                margin: 2,
+                color: { dark: "#020617", light: "#ffffff" },
+                errorCorrectionLevel: "M"
+            }, error => {
+                if (error) {
+                    canvas.classList.add("hidden");
+                    fallback.classList.remove("hidden");
+                    fallback.classList.add("flex");
+                }
+            });
+        }
+
+        form.addEventListener("submit", async event => {
+            event.preventDefault();
+            if (!submissionsEnabled) {
+                showToast("Submissions are currently closed.");
+                return;
+            }
+            const text = highlightInput.value.trim();
+            const month = monthSelect.value;
+            let valid = true;
+
+            if (!anonymousAllowed && !nameInput.value.trim()) {
+                showToast("Please add your name; anonymous posting is disabled.");
+                nameInput.focus();
+                return;
+            }
+
+            if (!text) {
+                document.getElementById("highlightError").classList.remove("hidden");
+                highlightInput.classList.add("border-rose-500", "ring-4", "ring-rose-100");
+                valid = false;
+            } else {
+                document.getElementById("highlightError").classList.add("hidden");
+                highlightInput.classList.remove("border-rose-500", "ring-4", "ring-rose-100");
+            }
+
+            if (month === "") {
+                document.getElementById("monthError").classList.remove("hidden");
+                monthSelect.classList.add("border-rose-500", "ring-4", "ring-rose-100");
+                valid = false;
+            } else {
+                document.getElementById("monthError").classList.add("hidden");
+                monthSelect.classList.remove("border-rose-500", "ring-4", "ring-rose-100");
+            }
+
+            if (!valid) {
+                (!text ? highlightInput : monthSelect).focus();
+                return;
+            }
+
+            const category = document.querySelector('input[name="category"]:checked')?.value || "";
+            const color = document.querySelector('input[name="color"]:checked')?.value || "yellow";
+            const entry = {
+                id: `entry-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+                name: nameInput.value.trim(),
+                text,
+                month: Number(month),
+                category,
+                color,
+                read: false,
+                createdAt: Date.now()
+            };
+
+            if (liveMode) {
+                const { data, error } = await supabaseClient.from("highlights").insert({
+                    event_code: CONFIG.EVENT_CODE,
+                    highlight: entry.text,
+                    month: entry.month,
+                    category: entry.category,
+                    display_name: entry.name || null,
+                    color: entry.color
+                }).select().single();
+                if (error) {
+                    console.error(error);
+                    showToast("The highlight could not be saved. Please try again.");
+                    return;
+                }
+                entry.id = data.id;
+                entry.createdAt = new Date(data.created_at).getTime();
+            }
+
+            entries.push(entry);
+            if (!saveEntries()) {
+                entries = entries.filter(item => item.id !== entry.id);
+                return;
+            }
+
+            shuffledOrder = null;
+            renderAll();
+            document.getElementById("entryPanel").classList.add("hidden");
+            document.getElementById("confirmationPanel").classList.remove("hidden");
+            document.getElementById("confirmationPanel").focus?.();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+
+        highlightInput.addEventListener("input", () => {
+            const length = highlightInput.value.length;
+            characterCount.textContent = `${length} / 280`;
+            characterCount.classList.toggle("text-rose-600", length >= 260);
+            if (highlightInput.value.trim()) {
+                document.getElementById("highlightError").classList.add("hidden");
+                highlightInput.classList.remove("border-rose-500", "ring-4", "ring-rose-100");
+            }
+        });
+
+        monthSelect.addEventListener("change", () => {
+            if (monthSelect.value !== "") {
+                document.getElementById("monthError").classList.add("hidden");
+                monthSelect.classList.remove("border-rose-500", "ring-4", "ring-rose-100");
+            }
+        });
+
+        participantTab.addEventListener("click", () => setView("participant"));
+        facilitatorTab.addEventListener("click", () => requestFacilitator(() => setView("facilitator")));
+        document.getElementById("joinEventButton").addEventListener("click", () => setView("participant"));
+        document.getElementById("openFacilitatorButton").addEventListener("click", () => requestFacilitator(() => setView("facilitator")));
+        document.getElementById("viewTimelineButton").addEventListener("click", () => requestFacilitator(() => setView("facilitator")));
+
+        document.getElementById("addAnotherButton").addEventListener("click", () => {
+            resetEntryForm();
+            document.getElementById("confirmationPanel").classList.add("hidden");
+            document.getElementById("entryPanel").classList.remove("hidden");
+            setTimeout(() => highlightInput.focus(), 50);
+        });
+
+        document.getElementById("shuffleButton").addEventListener("click", () => {
+            shuffledOrder = entries.map(entry => entry.id);
+            for (let i = shuffledOrder.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledOrder[i], shuffledOrder[j]] = [shuffledOrder[j], shuffledOrder[i]];
+            }
+            renderTimeline();
+            showToast("Highlights shuffled within the timeline.");
+        });
+
+        document.getElementById("namesButton").addEventListener("click", event => {
+            showNames = !showNames;
+            event.currentTarget.textContent = showNames ? "Hide names" : "Show names";
+            event.currentTarget.setAttribute("aria-pressed", String(showNames));
+            renderTimeline();
+        });
+
+        document.getElementById("hideReadButton").addEventListener("click", event => {
+            hideRead = !hideRead;
+            event.currentTarget.textContent = hideRead ? "Show read items" : "Hide read items";
+            event.currentTarget.setAttribute("aria-pressed", String(hideRead));
+            event.currentTarget.classList.toggle("bg-slate-900", hideRead);
+            event.currentTarget.classList.toggle("text-white", hideRead);
+            renderTimeline();
+        });
+
+        document.getElementById("readModeButton").addEventListener("click", () => {
+            const unread = entries.filter(entry => !entry.read);
+            if (!unread.length) {
+                showToast("All highlights have been read.");
+                return;
+            }
+            openReader(unread[0].id);
+        });
+
+        document.getElementById("resetButton").addEventListener("click", () => {
+            if (liveMode) {
+                showToast("Live reset is disabled. Use an authenticated admin workflow in production.");
+                return;
+            }
+            if (!window.confirm("Reset the prototype? This permanently removes browser-only submissions and restores the five demo highlights.")) return;
+            entries = safeClone(DEMO_ENTRIES);
+            showNames = true;
+            hideRead = false;
+            shuffledOrder = null;
+            saveEntries();
+            document.getElementById("namesButton").textContent = "Hide names";
+            document.getElementById("hideReadButton").textContent = "Hide read items";
+            document.getElementById("hideReadButton").classList.remove("bg-slate-900", "text-white");
+            renderAll();
+            showToast("Demo highlights restored.");
+        });
+
+        document.getElementById("closeModalButton").addEventListener("click", closeReader);
+        modal.addEventListener("click", event => {
+            if (event.target === modal) closeReader();
+        });
+
+        document.getElementById("markReadButton").addEventListener("click", async () => {
+            const entry = entries.find(item => item.id === activeEntryId);
+            if (!entry || entry.read) return;
+            if (liveMode) {
+                const { error } = await supabaseClient.from("highlights")
+                    .update({ is_read: true })
+                    .eq("id", entry.id)
+                    .eq("event_code", CONFIG.EVENT_CODE);
+                if (error) {
+                    console.error(error);
+                    showToast("Read status could not be updated.");
+                    return;
+                }
+            }
+            entry.read = true;
+            saveEntries();
+            renderAll();
+            document.getElementById("markReadButton").textContent = "Marked as read ✓";
+            document.getElementById("markReadButton").disabled = true;
+            document.getElementById("markReadButton").classList.add("opacity-60", "cursor-not-allowed");
+            showToast("Highlight marked as read.");
+        });
+
+        document.getElementById("nextHighlightButton").addEventListener("click", nextUnread);
+
+        document.addEventListener("keydown", event => {
+            if (event.key === "Escape" && !modal.classList.contains("hidden")) closeReader();
+            if (event.key === "ArrowRight" && !modal.classList.contains("hidden")) nextUnread();
+        });
+
+        document.getElementById("fullscreenQrButton").addEventListener("click", async () => {
+            const panel = document.getElementById("qrPanel");
+            try {
+                if (!document.fullscreenElement) {
+                    await panel.requestFullscreen();
+                    panel.classList.add("flex", "items-center", "justify-center", "min-h-screen");
+                } else {
+                    await document.exitFullscreen();
+                }
+            } catch (error) {
+                showToast("Full-screen mode is not available in this browser.");
+            }
+        });
+
+        document.addEventListener("fullscreenchange", () => {
+            if (!document.fullscreenElement) {
+                const panel = document.getElementById("qrPanel");
+                panel.classList.remove("flex", "items-center", "justify-center", "min-h-screen");
+            }
+        });
+
+        document.getElementById("planHeaderButton").addEventListener("click", () => {
+            requestFacilitator(() => {
+                setView("facilitator");
+                const plan = document.getElementById("planDrawer");
+                plan.open = true;
+                setTimeout(() => plan.scrollIntoView({ behavior: "smooth", block: "center" }), 150);
+            });
+        });
+
+        document.getElementById("submissionsButton").addEventListener("click", event => {
+            submissionsEnabled = !submissionsEnabled;
+            event.currentTarget.textContent = submissionsEnabled ? "Submissions enabled" : "Submissions closed";
+            event.currentTarget.setAttribute("aria-pressed", String(submissionsEnabled));
+            event.currentTarget.className = submissionsEnabled                ? "min-h-11 rounded-xl bg-emerald-100 px-4 text-sm font-bold text-emerald-800 focus:outline-none focus:ring-4 focus:ring-emerald-200"
+                : "min-h-11 rounded-xl bg-rose-100 px-4 text-sm font-bold text-rose-800 focus:outline-none focus:ring-4 focus:ring-rose-200";
+            showToast(submissionsEnabled ? "Submissions enabled in this browser." : "Submissions closed in this browser.");
+        });
+
+        document.getElementById("anonymousButton").addEventListener("click", event => {
+            anonymousAllowed = !anonymousAllowed;
+            event.currentTarget.textContent = anonymousAllowed ? "Anonymous allowed" : "Names required";
+            event.currentTarget.setAttribute("aria-pressed", String(anonymousAllowed));
+            showToast(anonymousAllowed ? "Anonymous posting allowed." : "Participants must enter a name.");
+        });
+
+        document.getElementById("exportButton").addEventListener("click", () => {
+            const escapeCsv = value => `"${String(value ?? "").replaceAll('"', '""')}"`;
+            const rows = [
+                ["id","event_code","highlight","month","category","display_name","color","is_read","created_at"],
+                ...entries.map(entry => [
+                    entry.id,
+                    liveMode ? CONFIG.EVENT_CODE : "local-demo",
+                    entry.text,
+                    MONTHS[entry.month],
+                    entry.category,
+                    entry.name,
+                    entry.color,
+                    entry.read,
+                    new Date(entry.createdAt).toISOString()
+                ])
+            ];            const csv = rows.map(row => row.map(escapeCsv).join(",")).join("\n");
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+            link.download = `highlights-${liveMode ? CONFIG.EVENT_CODE : "local-demo"}.csv`;
+            link.click();
+            URL.revokeObjectURL(link.href);
+            showToast("CSV export downloaded.");
+        });
+
+        document.getElementById("clearButton").addEventListener("click", () => {
+            if (liveMode) {
+                showToast("Live deletion requires authenticated admin tooling and is intentionally disabled.");
+                return;
+            }
+            if (!window.confirm("Delete every local highlight? This cannot be undone.")) return;
+            if (!window.confirm("Final confirmation: permanently delete all local entries?")) return;
+            entries = [];
+            saveEntries();
+            renderAll();            showToast("All local highlights deleted.");
+        });
+
+        document.getElementById("joinUrl").value = getPublicEventUrl();
+        document.getElementById("joinUrl").addEventListener("input", renderQrCode);
+        document.getElementById("copyJoinUrlButton").addEventListener("click", async () => {
+            const value = document.getElementById("joinUrl").value;
+            try {
+                await navigator.clipboard.writeText(value);
+                showToast("Join link copied.");
+            } catch (error) {
+                document.getElementById("joinUrl").select();
+                showToast("Link selected. Copy it from the address field.");
+            }
+        });
+
+        document.querySelectorAll(".copySnippet").forEach(button => {
+            button.addEventListener("click", async () => {
+                const text = document.getElementById(button.dataset.copyTarget).innerText;
+                try {
+                    await navigator.clipboard.writeText(text);
+                    showToast("Snippet copied.");
+                } catch (error) {
+                    showToast("Copy was blocked. Select the snippet manually.");
+                }
+            });
+        });
+
+        initialiseFormOptions();
+        renderQrCode();
+        loadEntries();
+        renderAll();
+    </script>
+</body></html>
