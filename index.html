@@ -7,6 +7,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
+    <script>
+    window.addEventListener("load", () => {
+      if (typeof window.QRCode === "undefined") {
+        console.error("The QR-code library was blocked or failed to load.");
+      }
+    });
+  </script>
 </head>
 <body class="min-h-screen bg-amber-50 font-sans text-slate-900 antialiased">
     <header class="border-b border-amber-100 bg-amber-50/95 shadow-sm backdrop-blur">
