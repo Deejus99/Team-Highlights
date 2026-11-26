@@ -1,0 +1,9 @@
+command:
+  - gunicorn
+  - --bind
+  - 0.0.0.0:${DATABRICKS_APP_PORT}
+  - app:app
+
+health_check:
+  path: /health
+  timeout_seconds: 60
