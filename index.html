@@ -1,4 +1,76 @@
-<!DOCTYPE html>
+<script type="module">
+  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+  const SUPABASE_URL = https://bptewzjoufegmvxmgemt.supabase.co;
+  const SUPABASE_PUBLIC_KEY = "sb_publishable_D-0BPZByKXldrpKSlsdCow_0IaSTlqV;
+  const EVENT_CODE = "team-day-2026";
+
+  const supabase = createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLIC_KEY
+  );
+
+  window.teamHighlightsBackend = {
+    async addHighlight({ highlight, month, name, category, colour }) {
+      const { data, error } = await supabase
+        .from("highlights")
+        .insert({
+          event_code: EVENT_CODE,
+          highlight,
+          month,
+          participant_name: name || null,
+          category: category || null,
+          colour: colour || "yellow"
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+
+    async getHighlights() {
+      const { data, error } = await supabase
+        .from("highlights")
+        .select("*")
+        .eq("event_code", EVENT_CODE)
+        .order("month", { ascending: true })
+        .order("created_at", { ascending: true });
+
+      if (error) throw error;
+      return data;
+    },
+
+    async markAsRead(id, isRead) {
+      const { data, error } = await supabase
+        .from("highlights")
+        .update({ is_read: isRead })
+        .eq("id", id)
+        .eq("event_code", EVENT_CODE)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+
+    subscribe(onChange) {
+      return supabase
+        .channel(`highlights-${EVENT_CODE}`)
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "highlights",
+            filter: `event_code=eq.${EVENT_CODE}`
+          },
+          onChange
+        )
+        .subscribe();
+    }
+  };
+</script>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
