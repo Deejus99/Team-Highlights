@@ -1,76 +1,4 @@
-<script type="module">
-  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
-
-  const SUPABASE_URL = https://bptewzjoufegmvxmgemt.supabase.co;
-  const SUPABASE_PUBLIC_KEY = "sb_publishable_D-0BPZByKXldrpKSlsdCow_0IaSTlqV;
-  const EVENT_CODE = "team-day-2026";
-
-  const supabase = createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLIC_KEY
-  );
-
-  window.teamHighlightsBackend = {
-    async addHighlight({ highlight, month, name, category, colour }) {
-      const { data, error } = await supabase
-        .from("highlights")
-        .insert({
-          event_code: EVENT_CODE,
-          highlight,
-          month,
-          participant_name: name || null,
-          category: category || null,
-          colour: colour || "yellow"
-        })
-        .select()
-        .single();
-
-      if (error) throw error;
-      return data;
-    },
-
-    async getHighlights() {
-      const { data, error } = await supabase
-        .from("highlights")
-        .select("*")
-        .eq("event_code", EVENT_CODE)
-        .order("month", { ascending: true })
-        .order("created_at", { ascending: true });
-
-      if (error) throw error;
-      return data;
-    },
-
-    async markAsRead(id, isRead) {
-      const { data, error } = await supabase
-        .from("highlights")
-        .update({ is_read: isRead })
-        .eq("id", id)
-        .eq("event_code", EVENT_CODE)
-        .select()
-        .single();
-
-      if (error) throw error;
-      return data;
-    },
-
-    subscribe(onChange) {
-      return supabase
-        .channel(`highlights-${EVENT_CODE}`)
-        .on(
-          "postgres_changes",
-          {
-            event: "*",
-            schema: "public",
-            table: "highlights",
-            filter: `event_code=eq.${EVENT_CODE}`
-          },
-          onChange
-        )
-        .subscribe();
-    }
-  };
-</script>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -220,7 +148,7 @@
                         </svg>
                     </div>
                     <h2 class="mt-6 text-3xl font-black tracking-tight">Your highlight is in!</h2>
-                    <p class="mt-3 text-base leading-7 text-slate-600">Thank you for adding a bright spot to the year. It is now saved to this browser’s timeline.</p>
+                    <p class="mt-3 text-base leading-7 text-slate-600">Thank you for adding a bright spot to the year. It is now saved to the shared team timeline.</p>
                     <div class="mt-7 grid gap-3 sm:grid-cols-2">
                         <button id="addAnotherButton" type="button" class="min-h-12 rounded-xl bg-slate-900 px-5 font-bold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-amber-200">Add another highlight</button>
                         <button id="viewTimelineButton" type="button" class="min-h-12 rounded-xl border border-slate-300 bg-white px-5 font-bold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-amber-200">View timeline</button>
@@ -386,11 +314,11 @@
                                 <button type="button" data-copy-target="configSnippet" class="copySnippet rounded-lg bg-slate-900 px-3 py-2 text-xs font-bold text-white">Copy</button>
                             </div>
                             <pre id="configSnippet" class="overflow-x-auto rounded-2xl bg-slate-950 p-4 text-xs leading-6 text-slate-100"><code>const CONFIG = {
-  SUPABASE_URL: "YOUR_SUPABASE_URL",
-  SUPABASE_ANON_KEY: "YOUR_SUPABASE_ANON_KEY",
-  EVENT_CODE: "YOUR_EVENT_CODE",
-  PUBLIC_EVENT_URL: "YOUR_PUBLIC_EVENT_URL",
-  FACILITATOR_PIN: ""
+  SUPABASE_URL: "https://bptewzjoufegmvxmgemt.supabase.co",
+    SUPABASE_ANON_KEY: "sb_publishable_D-0BPZByKXldrpKSlsdCow_0IaSTlqV",
+    EVENT_CODE: "team-day-2026",
+    PUBLIC_EVENT_URL: "",
+    FACILITATOR_PIN: ""
 };</code></pre>
                         </section>
 
