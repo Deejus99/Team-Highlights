@@ -6,7 +6,7 @@
     <title>Highlights of the Year</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
 </head>
 <body class="min-h-screen bg-amber-50 font-sans text-slate-900 antialiased">
     <header class="border-b border-amber-100 bg-amber-50/95 shadow-sm backdrop-blur">
@@ -243,8 +243,7 @@
                     <article id="qrPanel" class="rounded-3xl bg-slate-900 p-5 text-white shadow-xl sm:p-7">
                         <div class="flex flex-col gap-6 sm:flex-row sm:items-center">
                             <div class="relative mx-auto aspect-square w-full max-w-[15rem] shrink-0 rounded-3xl bg-white p-4 shadow-2xl sm:mx-0">
-                                <canvas id="qrCanvas" class="h-full w-full rounded-lg" aria-label="QR code for the public event URL"></canvas>
-                                <div id="qrFallback" class="hidden h-full items-center justify-center rounded-xl border-2 border-dashed border-slate-300 p-4 text-center text-sm font-bold text-slate-600">QR library unavailable. Copy and share the link instead.</div>
+                            <canvas id="qrCanvas" class="h-full w-full rounded-lg" aria-label="QR code for the public event URL"></canvas>                                <div id="qrFallback" class="hidden h-full items-center justify-center rounded-xl border-2 border-dashed border-slate-300 p-4 text-center text-sm font-bold text-slate-600">QR library unavailable. Copy and share the link instead.</div>
                             </div>
                             <div class="min-w-0 flex-1">
                                 <p class="text-xs font-bold uppercase tracking-[0.18em] text-amber-300">Joining panel</p>
