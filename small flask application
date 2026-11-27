@@ -1,17 +1,31 @@
 import os
-
 from flask import Flask, jsonify, send_from_directory
 
-app = Flask(__name__, static_folder="static", static_url_path="")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_DIR = os.path.join(BASE_DIR, "static")
+
+app = Flask(__name__)
 
 @app.get("/health")
 def health():
     return jsonify(status="ok")
 
-@app.route("/")
+@app.get("/")
 def index():
-    return send_from_directory("static", "index.html")
+    return send_from_directory(STATIC_DIR, "index.html")
 
-@app.route("/<path:path>")
+@app.get("/qrcode.min.js")
+def qr_library():
+    return send_from_directory(
+        STATIC_DIR,
+        "qrcode.min.js",
+        mimetype="application/javascript"
+    )
+
+@app.get("/<path:path>")
 def static_files(path):
-    return send_from_directory("static", path)
+    return send_from_directory(STATIC_DIR, path)
+
+if __name__ == "__main__":
+    port = int(os.environ.get("DATABRICKS_APP_PORT", 8000))
+    app.run(host="0.0.0.0", port=port)
