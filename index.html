@@ -1,21 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Highlights of the Year</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script
-  src="https://deejus99.github.io/Team-Highlights/qrcode.min.js?v=6"
-  onerror="console.error('Failed to load the QR library')">
-</script>
-    window.addEventListener("load", () => {
-      if (typeof window.QRCode === "undefined") {
-        console.error("The QR-code library was blocked or failed to load.");
-      }
-    });
-  </script>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+ <title>Highlights of the Year</title>
+
+ <script src="https://cdn.tailwindcss.com"></script>
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body class="min-h-screen bg-amber-50 font-sans text-slate-900 antialiased">
     <header class="border-b border-amber-100 bg-amber-50/95 shadow-sm backdrop-blur">
@@ -964,29 +957,41 @@ await client.from("highlights").update({ is_read: true }).eq("id", id);</code></
         }
 
         function renderQrCode() {
-            const url = document.getElementById("joinUrl").value.trim() || getPublicEventUrl();
-            const canvas = document.getElementById("qrCanvas");
-            const fallback = document.getElementById("qrFallback");
-            if (!window.QRCode) {
-                canvas.classList.add("hidden");
-                fallback.classList.remove("hidden");
-                fallback.classList.add("flex");
-                return;
-            }
-            fallback.classList.add("hidden");
-            fallback.classList.remove("flex");
-            canvas.classList.remove("hidden");
-            window.QRCode.toCanvas(canvas, url, {
-                width: 420,
-                margin: 2,
-                color: { dark: "#020617", light: "#ffffff" },
-                errorCorrectionLevel: "M"
-            }, error => {
-                if (error) {
-                    canvas.classList.add("hidden");
-                    fallback.classList.remove("hidden");
-                    fallback.classList.add("flex");
-                }
+         const url =
+          document.getElementById("joinUrl").value.trim()
+          || getPublicEventUrl();
+        
+         const container = document.getElementById("qrCanvas");
+         const fallback = document.getElementById("qrFallback");
+        
+         container.innerHTML = "";
+        
+         if (typeof window.QRCode === "undefined") {
+          container.classList.add("hidden");
+          fallback.classList.remove("hidden");
+          fallback.classList.add("flex");
+          return;
+         }
+        
+         fallback.classList.add("hidden");
+         fallback.classList.remove("flex");
+         container.classList.remove("hidden");
+        
+         try {
+          new window.QRCode(container, {
+           text: url,
+           width: 220,
+           height: 220,
+           colorDark: "#020617",
+           colorLight: "#ffffff",
+           correctLevel: window.QRCode.CorrectLevel.M
+          });
+         } catch (error) {
+          console.error("QR generation failed:", error);
+          container.classList.add("hidden");
+          fallback.classList.remove("hidden");
+          fallback.classList.add("flex");
+         }
             });
         }
 
