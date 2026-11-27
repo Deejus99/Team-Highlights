@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="en">
 <head>
  <meta charset="UTF-8">
@@ -249,7 +249,7 @@
                              class="flex aspect-square w-full items-center justify-center overflow-hidden rounded-xl bg-white"
                              aria-label="QR code for the public event URL">
                             </div>
-                           
+
                             <div
                              id="qrFallback"
                              class="hidden aspect-square w-full items-center justify-center rounded-xl border-2 border-dashed border-slate-300 p-4 text-center text-sm font-bold text-slate-600">
@@ -969,35 +969,35 @@ await client.from("highlights").update({ is_read: true }).eq("id", id);</code></
          const container = document.getElementById("qrCanvas");
          const fallback = document.getElementById("qrFallback");
          const joinUrlInput = document.getElementById("joinUrl");
-        
+
          if (!container || !joinUrlInput) {
          console.error("Missing required QR elements.");
          return;
          }
-        
+
          const url = joinUrlInput.value.trim() || getPublicEventUrl();
-        
+
          container.innerHTML = "";
-        
+
          if (typeof window.QRCode !== "function") {
          container.classList.add("hidden");
-        
+
          if (fallback) {
           fallback.classList.remove("hidden");
           fallback.classList.add("flex");
          }
-        
+
          return;
          }
-        
+
          if (fallback) {
          fallback.classList.add("hidden");
          fallback.classList.remove("flex");
          }
-        
+
          container.classList.remove("hidden");
          container.classList.add("flex");
-        
+
          try {
          new window.QRCode(container, {
           text: url,
@@ -1007,23 +1007,23 @@ await client.from("highlights").update({ is_read: true }).eq("id", id);</code></
           colorLight: "#ffffff",
           correctLevel: window.QRCode.CorrectLevel.M
          });
-        
+
          const canvas = container.querySelector("canvas");
          const image = container.querySelector("img");
-        
+
          [canvas, image].filter(Boolean).forEach(element => {
           element.style.display = "block";
           element.style.width = "100%";
           element.style.height = "auto";
           element.style.maxWidth = "220px";
          });
-        
+
          console.log("QR generated for:", url);
          } catch (error) {
          console.error("QR generation failed:", error);
          container.classList.add("hidden");
          container.classList.remove("flex");
-        
+
          if (fallback) {
           fallback.classList.remove("hidden");
           fallback.classList.add("flex");
@@ -1343,9 +1343,12 @@ await client.from("highlights").update({ is_read: true }).eq("id", id);</code></
         renderQrCode();
         loadEntries();
         renderAll();
+     window.addEventListener("load", () => {
+ document.getElementById("joinUrl").value = getPublicEventUrl();
+ renderQrCode();
+});
     </script>
-</body>
-</html>
+</body></html>
 git add static/index.html static/qrcode.min.js
 git commit -m "Load QR library locally"
 git push
