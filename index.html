@@ -1340,12 +1340,9 @@ await client.from("highlights").update({ is_read: true }).eq("id", id);</code></
         });
 
         initialiseFormOptions();
+        renderQrCode();
         loadEntries();
         renderAll();
-     window.addEventListener("load", () => {
- document.getElementById("joinUrl").value = getPublicEventUrl();
- renderQrCode();
-});
     </script>
 </body></html>
 git add static/index.html static/qrcode.min.js
